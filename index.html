@@ -67,8 +67,8 @@
 <section class="section wrap" id="tracker">
 <div class="section-head"><div><div class="kicker">Your private check-in</div><h2>Notice progress, not perfection.</h2></div><p class="section-lead">Record a small step, a difficult moment or a win. A setback does not erase the effort you've already made.</p></div>
 <div class="tracker-shell">
-<div class="tracker-intro"><div class="kicker">Daily reflection</div><h3>Show up for yourself today.</h3><p>Use this simple tracker to recognise patterns and celebrate actions that support your wellbeing. Your entries stay in this browser on this device. No account is required.</p>
-<div class="privacy-chip">▣ Stored on this device by default</div>
+<div class="tracker-intro"><div class="kicker">Daily reflection</div><h3>Show up for yourself today.</h3><p>Use this simple tracker to recognise patterns and celebrate actions that support your wellbeing. Guest entries stay on this device. When signed in, new entries are saved privately to your account and can be accessed across devices.</p>
+<div class="privacy-chip" id="tracker-storage-mode">▣ Guest entries stay on this device</div><p class="form-note" id="tracker-sync-status" role="status" aria-live="polite">Checking your account status…</p>
 <div class="tracker-stats"><div class="stat"><b id="stat-total">0</b><span>Check-ins logged</span></div><div class="stat"><b id="stat-week">0</b><span>Last 7 days</span></div></div>
 <div class="log-list" id="log-list"><div class="empty">Your check-ins will appear here. Start with one small entry.</div></div>
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:13px"><button class="btn btn-ghost" id="export-btn" type="button">Export my data</button><button class="btn btn-ghost" id="clear-btn" type="button">Clear this device</button></div>
@@ -119,7 +119,7 @@
 (function(){
 const $=id=>document.getElementById(id);
 const KEY='freedom_local_checkins_v1';
-let entries=load(), currentUser=null;
+let entries=load(), currentUser=null, trackerMode='checking';
 function load(){try{const value=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(value)?value:[]}catch(e){return []}}function persist(){try{localStorage.setItem(KEY,JSON.stringify(entries));render();return true}catch(e){toast('Browser storage is unavailable. Your check-in was not saved.');return false}}function today(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}function makeId(){return window.crypto&&typeof window.crypto.randomUUID==='function'?window.crypto.randomUUID():'entry-'+Date.now()+'-'+Math.random().toString(36).slice(2)}
 $('log-date').value=today();$('year').textContent=new Date().getFullYear();
 const names={pornography:'Pornography', 'compulsive-sexual-behaviour':'Compulsive sexual behaviour',smoking:'Smoking / nicotine',alcohol:'Alcohol'};
@@ -132,11 +132,49 @@ const list=entries.slice().sort((a,b)=>(b.log_date||'').localeCompare(a.log_date
 $('log-list').innerHTML=list.length?list.map(e=>'<div class="log-item"><span><b>'+esc(names[e.category]||e.category)+'</b><br><small>'+esc(events[e.event_type]||e.event_type)+'</small></span><small>'+esc(e.log_date)+'</small></div>').join(''):'<div class="empty">Your check-ins will appear here. Start with one small entry.</div>';
 }
 function toast(s){$('toast').textContent=s;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2500)}
-$('tracker-form').addEventListener('submit',e=>{
+async function initialiseTracker(){
+try{
+ const response=await fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'});
+ if(!response.ok)throw new Error('Account status unavailable');
+ const data=await response.json();
+ if(data.user){
+  currentUser=data.user;trackerMode='account';
+  $('tracker-storage-mode').textContent='▣ Private account sync enabled';
+  $('tracker-sync-status').textContent='Signed in: new check-ins are saved to your private account. Your older guest entries remain only on this device and are not copied.';
+  const saved=await fetch('/api/checkins',{credentials:'same-origin',cache:'no-store'});
+  const payload=await saved.json();
+  if(!saved.ok)throw new Error(payload.error||'Could not load your account check-ins');
+  entries=Array.isArray(payload.entries)?payload.entries:[];
+ }else{
+  currentUser=null;trackerMode='guest';
+  $('tracker-storage-mode').textContent='▣ Guest entries stay on this device';
+  $('tracker-sync-status').textContent='You are using guest mode. Check-ins are stored only in this browser on this device.';
+ }
+ render();
+}catch(error){
+ trackerMode='error';
+ $('tracker-sync-status').textContent='Could not verify account status. Refresh this page before saving, so your check-in is not stored in the wrong place.';
+ $('tracker-form').querySelector('button[type="submit"]').disabled=true;
+}
+}
+$('tracker-form').addEventListener('submit',async e=>{
 e.preventDefault();
+if(trackerMode==='checking'||trackerMode==='error'){toast('Please refresh and wait for account status to load.');return}
 const entry={id:makeId(),category:$('category').value,event_type:$('event').value,intensity:$('intensity').value?Number($('intensity').value):null,log_date:$('log-date').value};
 if(!entry.log_date||entry.log_date>today()){toast('Choose today or an earlier date.');return}
-entries.push(entry);if(persist()){$('intensity').value='';toast('Check-in saved on this device.')}else{entries.pop()}
+const submit=$('tracker-form').querySelector('button[type="submit"]');submit.disabled=true;
+try{
+ if(trackerMode==='account'){
+  const response=await fetch('/api/checkins',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry)});
+  const payload=await response.json();if(!response.ok)throw new Error(payload.error||'Could not save your account check-in.');
+  const refresh=await fetch('/api/checkins',{credentials:'same-origin',cache:'no-store'});const data=await refresh.json();if(!refresh.ok)throw new Error(data.error||'Saved, but could not refresh your check-ins.');
+  entries=Array.isArray(data.entries)?data.entries:[];render();toast('Check-in saved to your private account.');
+ }else{
+  entries.push(entry);if(persist())toast('Check-in saved on this device.');else entries.pop();
+ }
+ $('intensity').value='';
+}catch(error){toast(error.message||'Could not save your check-in. Please try again.')}
+finally{submit.disabled=false}
 });
 $('clear-btn').addEventListener('click',()=>{if(confirm('Clear all check-ins stored on this device? This cannot be undone.')){const previous=entries;entries=[];if(persist())toast('Device check-ins cleared.');else entries=previous}});
 $('export-btn').addEventListener('click',()=>{try{const blob=new Blob([JSON.stringify(entries,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='freedom-my-checkins.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}catch(e){toast('Export is not available in this browser.')}});
@@ -158,6 +196,7 @@ alcohol:['Alcohol use and getting safe support','<p>Alcohol can affect health, r
 $('modal-close').addEventListener('click',closeModal);$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
 $('menu-btn').addEventListener('click',()=>$('nav').classList.toggle('open'));$('nav').querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>$('nav').classList.remove('open')));
 render();
+initialiseTracker();
 })();
 </script>
 </body></html>
