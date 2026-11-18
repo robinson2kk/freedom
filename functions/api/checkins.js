@@ -1,4 +1,4 @@
-import { json, currentUser, secureHeaders, randomHex } from "../_lib.js";
+import { json, currentUser, secureHeaders, randomHex } from "./_lib.js";
 export async function onRequestGet({ request, env }) {
   const user = await currentUser(request, env);
   if (!user) return json({ error: "Please sign in." }, 401);
