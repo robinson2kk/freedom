@@ -1,4 +1,4 @@
-import {json,currentUser,secureHeaders} from "../_lib.js";
+import {json,currentUser,secureHeaders} from "../../_lib.js";
 async function adminUser(request,env){const u=await currentUser(request,env),allowed=String(env.FREEDOM_ADMIN_EMAIL||"").trim().toLowerCase();return u&&allowed&&u.email.toLowerCase()===allowed?u:null}
 export async function onRequestPatch({request,env,params}){
  if(!secureHeaders(request))return json({error:"Request origin could not be verified."},403);
