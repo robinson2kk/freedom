@@ -1,0 +1,9 @@
+name = "freedom"
+pages_build_output_dir = "."
+compatibility_date = "2026-11-18"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "freedom-db"
+database_id = "84434484-7778-4161-af69-7ea65ca18f41"
+migrations_dir = "migrations"
