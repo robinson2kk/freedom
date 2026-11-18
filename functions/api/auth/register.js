@@ -9,6 +9,7 @@ export async function onRequestPost({ request, env }) {
   if (password.length < 12 || password.length > 128) return json({ error: "Use a password between 12 and 128 characters." }, 400);
   const attempts = await env.DB.prepare("SELECT COUNT(*) AS n FROM auth_attempts WHERE email_key = ? AND attempted_at > datetime('now','-1 hour')").bind(email).first();
   if ((attempts?.n || 0) >= 5) return json({ error: "Too many attempts. Please try again later." }, 429);
+  await env.DB.prepare("INSERT INTO auth_attempts (id,email_key) VALUES (?,?)").bind(randomHex(16),email).run();
   const salt = randomHex(16);
   const hash = await passwordHash(password, salt);
   const userId = randomHex(16);
