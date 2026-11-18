@@ -1,4 +1,4 @@
-import { json, currentUser, secureHeaders } from "../../_lib.js";
+import { json, currentUser, secureHeaders } from "../_lib.js";
 async function adminUser(request,env){
  const user=await currentUser(request,env);
  const allowed=String(env.FREEDOM_ADMIN_EMAIL||"").trim().toLowerCase();
