@@ -17,6 +17,7 @@ export async function onRequestDelete({ request, env }) {
   const { passwordHash } = await import("../_lib.js");
   const row = await env.DB.prepare("SELECT password_hash, password_salt FROM users WHERE id = ?").bind(user.id).first();
   if (!row || await passwordHash(password, row.password_salt) !== row.password_hash) return json({ error: "Password is incorrect. Your account was not deleted." }, 401);
+  await env.DB.prepare("DELETE FROM auth_attempts WHERE email_key = ?").bind(user.email.toLowerCase()).run();
   await env.DB.prepare("DELETE FROM users WHERE id = ?").bind(user.id).run();
   return json({ ok: true }, 200, { "Set-Cookie": "freedom_session=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0" });
 }
