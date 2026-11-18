@@ -1,1 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="20" fill="#82d7b0"/><path d="M32 12v40M17 27l15-15 15 15M17 37l15 15 15-15" fill="none" stroke="#092019" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="FREEDOM sunrise and bird logo">
+<defs><linearGradient id="t" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#08AFAE"/><stop offset="1" stop-color="#48F2D6"/></linearGradient></defs>
+<circle cx="32" cy="32" r="28" fill="#071A1E" stroke="url(#t)" stroke-width="2.6" stroke-dasharray="155 22" transform="rotate(-18 32 32)"/>
+<path d="M7 46 19 39 28 43 40 36 57 45" fill="none" stroke="#147F83" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M30 47c-3-4 4-5 4-8-1-2-5-2-6-4 5 1 10 2 10 5 0 3-5 4-3 7" fill="url(#t)"/>
+<path d="M20 26c5 1 9 3 13 6 3-5 7-8 14-9-4 3-6 6-8 10-5 5-12 4-19-7Z" fill="url(#t)"/>
+</svg>
