@@ -12,15 +12,15 @@ export async function onRequestGet({ env }) {
 function automatedSafetyCheck(message) {
   const text = message.toLowerCase();
   const checks = [
-    { pattern: /(?:https?:\\/\\/|www\\.)/i, reason: "Links aren't allowed in community chat." },
-    { pattern: /\\b[\\w.+-]+@[\\w.-]+\\.[a-z]{2,}\\b/i, reason: "Please don't share email addresses." },
-    { pattern: /(?:\\+?\\d[\\d .()\\-]{7,}\\d)/, reason: "Please don't share phone numbers." },
-    { pattern: /\\b(?:kill yourself|go die|i will kill|i'll kill|threaten(?:ing)?)\\b/i, reason: "Threatening or self-harm encouraging language isn't allowed." },
-    { pattern: /\\b(?:idiot|moron|retard|stfu|f\\*\\*?k you|shut up)\\b/i, reason: "Please rewrite this respectfully." },
-    { pattern: /\\b(?:stop taking (?:your )?(?:medication|medicine|meds)|quit alcohol cold turkey|stop your prescribed)\\b/i, reason: "Unsafe medical instructions aren't allowed. Encourage people to speak with a qualified professional." }
+    { pattern: /(?:https?:\/\/|www\.)/i, reason: "Links aren't allowed in community chat." },
+    { pattern: /\b[\w.+-]+@[\w.-]+\.[a-z]{2,}\b/i, reason: "Please don't share email addresses." },
+    { pattern: /(?:\+?\d[\d .()\-]{7,}\d)/, reason: "Please don't share phone numbers." },
+    { pattern: /\b(?:kill yourself|go die|i will kill|i'll kill|threaten(?:ing)?)\b/i, reason: "Threatening or self-harm encouraging language isn't allowed." },
+    { pattern: /\b(?:idiot|moron|retard|stfu|f\*\*?k you|shut up)\b/i, reason: "Please rewrite this respectfully." },
+    { pattern: /\b(?:stop taking (?:your )?(?:medication|medicine|meds)|quit alcohol cold turkey|stop your prescribed)\b/i, reason: "Unsafe medical instructions aren't allowed. Encourage people to speak with a qualified professional." }
   ];
   for (const check of checks) if (check.pattern.test(message)) return check.reason;
-  if (/(.)\\1{9,}/i.test(message)) return "Please remove repeated characters and try again.";
+  if (/(.)\1{9,}/i.test(message)) return "Please remove repeated characters and try again.";
   return null;
 }
 
