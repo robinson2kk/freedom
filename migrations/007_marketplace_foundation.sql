@@ -1,6 +1,6 @@
 -- FREEDOM marketplace foundation.
 -- This migration creates booking/payment ledgers only. No gateway is activated by this migration.
-ALTER TABLE professional_applications ADD COLUMN marketplace_category TEXT;
+ALTER TABLE professional_applications ADD COLUMN marketplace_category TEXT;\nALTER TABLE professional_applications ADD COLUMN linked_user_id TEXT;
 ALTER TABLE professional_applications ADD COLUMN provider_onboarding_status TEXT NOT NULL DEFAULT 'not_started';
 
 CREATE TABLE IF NOT EXISTS marketplace_categories (
