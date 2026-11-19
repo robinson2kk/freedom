@@ -7,6 +7,9 @@ export async function onRequestPatch({request,env,params}){
  const status=String(b.status||"");if(!["pending","reviewing","verified","rejected"].includes(status))return json({error:"Choose a valid review status."},400);
  const id=String(params.id||"");
  if(status==="verified"){
+  const applicant=await env.DB.prepare("SELECT applicant_type,marketplace_category FROM professional_applications WHERE id=?").bind(id).first();
+  if(!applicant)return json({error:"Application not found."},404);
+  if(["professional","peer"].includes(applicant.applicant_type)&&!["clinical_psychologist","counsellor","addiction_recovery","psychiatrist","wellness_coach","peer_support"].includes(applicant.marketplace_category))return json({error:"Select a valid marketplace category before approving this professional or peer-support application."},400);
   const source=String(b.verificationSource||"").trim().slice(0,300),notes=String(b.verificationNotes||"").trim().slice(0,1000),expiry=String(b.verificationExpiresAt||"").trim();
   const c=b.checklist||{};const required=["identityMatch","qualificationChecked","registrationChecked","scopeChecked","restrictionsChecked"];if(required.some(k=>c[k]!==true))return json({error:"Complete all five credential-verification checks before approving."},400);
   if(!source||!notes)return json({error:"Record the official registry/issuing source and what you checked before verifying."},400);
