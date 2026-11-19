@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Explore approved FREEDOM support professionals and their services.">
+<meta name="theme-color" content="#061619"><title>Find support — FREEDOM</title><link rel="stylesheet" href="./theme.css">
+<style>
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);line-height:1.6}.wrap{width:min(1040px,calc(100% - 32px));margin:auto}.top{padding:22px 0;border-bottom:1px solid var(--border)}.top a{color:var(--brand);font-weight:900;letter-spacing:.16em;text-decoration:none}.main{padding:44px 0 80px}.eyebrow{color:var(--brand);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.lead,.muted{color:var(--text-dim)}.filters{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;margin:24px 0}.filters input,.filters select{min-width:0;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font:inherit}.btn{border:0;border-radius:999px;padding:12px 18px;background:var(--brand);color:var(--on-brand);font-weight:800;cursor:pointer}.notice{padding:16px;border:1px solid var(--border);border-radius:14px;margin:20px 0;color:var(--text-dim);font-size:13px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{border:1px solid var(--border);background:var(--surface);border-radius:16px;padding:20px}.card h2{font-size:19px;margin:0 0 6px}.tag{display:inline-block;border:1px solid var(--border);border-radius:99px;padding:3px 9px;font-size:11px;color:var(--text-dim);margin:3px 4px 3px 0}.price{font-size:20px;font-weight:800;color:var(--brand)}.empty{padding:30px;border:1px dashed var(--border);border-radius:16px;color:var(--text-dim);text-align:center}.status{min-height:24px;color:var(--text-dim)}@media(max-width:680px){.filters,.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body><header class="wrap top"><a href="./">FREEDOM</a></header>
+<main class="wrap main">
+<a href="./" class="muted">← Back to FREEDOM</a>
+<p class="eyebrow">Support directory</p><h1>Find the right support.</h1>
+<p class="lead">Explore services from professionals whose applications and service listings have completed FREEDOM's internal review. Review does not replace checking a provider's credentials or suitability for your needs.</p>
+<div class="notice"><strong>Important:</strong> FREEDOM is an educational platform, not an emergency or crisis service. Paid booking and checkout are not live yet. If you need urgent help in India, call 112; Tele-MANAS is available at 14416.</div>
+<form id="filters" class="filters">
+<select id="category" aria-label="Support category"><option value="">All categories</option></select>
+<input id="location" maxlength="80" placeholder="City or service location" aria-label="City or service location">
+<button class="btn" type="submit">Search</button>
+</form>
+<p id="status" class="status" role="status" aria-live="polite">Loading available services…</p>
+<section id="results" class="grid" aria-live="polite"></section>
+</main>
+<script>
+(()=>{const $=id=>document.getElementById(id);const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));const labels={clinical_psychologist:"Clinical Psychologist",counsellor:"Counsellor",addiction_recovery:"Addiction Recovery Professional",psychiatrist:"Psychiatrist",wellness_coach:"Life & Wellness Coach",peer_support:"Peer-Support Facilitator"};
+async function categories(){const r=await fetch("./api/marketplace/categories",{cache:"no-store"});if(!r.ok)throw new Error("Categories are temporarily unavailable.");const d=await r.json();$("category").innerHTML='<option value="">All categories</option>'+(d.categories||[]).map(x=>'<option value="'+esc(x.id)+'">'+esc(x.label)+'</option>').join("")}
+async function search(e){if(e)e.preventDefault();$("status").textContent="Searching reviewed listings…";$("results").innerHTML="";try{const q=new URLSearchParams();if($("category").value)q.set("category",$("category").value);if($("location").value.trim())q.set("location",$("location").value.trim());const r=await fetch("./api/marketplace/providers?"+q.toString(),{cache:"no-store"});const d=await r.json();if(!r.ok)throw new Error(d.error||"Search failed.");const rows=d.listings||[];$("status").textContent=rows.length?rows.length+" service listing(s) found.":"No approved, bookable service listings are available for these filters yet.";if(!rows.length){$("results").innerHTML='<div class="empty">There are no active reviewed services with available slots yet. You can still use FREEDOM’s free educational resources while the professional booking service is being prepared.</div>';return}$("results").innerHTML=rows.map(x=>'<article class="card"><span class="tag">'+esc(labels[x.marketplace_category]||x.marketplace_category)+'</span><h2>'+esc(x.full_name)+'</h2><p class="muted">'+esc([x.location,x.languages].filter(Boolean).join(" · "))+'</p><h3>'+esc(x.service_title)+'</h3><p>'+esc(x.service_description||"Service details to be confirmed.")+'</p><p class="muted">'+esc(x.duration_minutes)+' minutes · '+esc(x.delivery_mode)+'</p><p class="price">₹'+(Number(x.price_paise)/100).toFixed(0)+'</p><p class="muted">Next available: '+esc(new Date(x.next_available).toLocaleString("en-IN",{timeZone:"Asia/Kolkata",dateStyle:"medium",timeStyle:"short"}))+'</p><p class="muted">'+esc(x.qualifications||"")+'</p><p class="muted">'+esc(x.support_areas||"")+'</p><span class="tag">Booking not open yet</span></article>').join("")}catch(err){$("status").textContent=err.message}}
+$("filters").addEventListener("submit",search);categories().then(search).catch(e=>{$("status").textContent=e.message});
+})();
+</script></body></html>
