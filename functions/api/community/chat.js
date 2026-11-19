@@ -25,8 +25,8 @@ export async function onRequestPost({ request, env }) {
   if (!user) return json({error:"Please sign in to join the community chat."},401);
   let body; try { body=await request.json(); } catch { return json({error:"Invalid message."},400); }
   const message=String(body.message||"").trim();
-  const displayName=String(body.display_name||"").normalize("NFKC").trim().replace(/[\\u0000-\\u001f\\u007f]/g,"");
-  if (displayName.length<2 || displayName.length>24 || !/^[\\p{L}\\p{N} _.-]+$/u.test(displayName)) return json({error:"Choose a nickname of 2–24 letters or numbers. Spaces, dots, hyphens and underscores are allowed."},400);
+  const displayName=String(body.display_name||"").normalize("NFKC").trim().replace(/[\u0000-\u001f\u007f]/g,"");
+  if (displayName.length<2 || displayName.length>24 || !/^[\p{L}\p{N} _.-]+$/u.test(displayName)) return json({error:"Choose a nickname of 2–24 letters or numbers. Spaces, dots, hyphens and underscores are allowed."},400);
   if (!message || message.length>500) return json({error:"Messages must be between 1 and 500 characters."},400);
   const blockedReason=automatedSafetyCheck(message);
   if (blockedReason) return json({error:blockedReason},422);
