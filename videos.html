@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Free, English-first YouTube learning videos about addiction, recovery, smoking cessation, alcohol, sobriety and compulsive sexual behaviour.">
+<meta name="theme-color" content="#061619">
+<meta property="og:title" content="FREEDOM — Free Recovery Video Library">
+<meta property="og:description" content="Carefully selected free educational videos to support informed recovery, one step at a time.">
+<title>FREEDOM — Recovery Video Library</title>
+<link rel="icon" href="./logo.svg" type="image/svg+xml"><link rel="stylesheet" href="./theme.css">
+<style>
+:root{--mint:#22DCC6;--mint2:#A4FFF0;--line:rgba(100,210,205,.15)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
+body{background:radial-gradient(ellipse at 75% -15%,rgba(20,180,168,.2),transparent 40%),#061619;color:#f3f7f4;line-height:1.55}
+a{text-decoration:none;color:inherit}.wrap{width:min(1160px,calc(100% - 40px));margin:auto}
+.topbar{height:78px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.brand img{display:block;width:170px;height:auto;max-height:38px;object-fit:contain}
+.nav{display:flex;align-items:center;gap:25px;color:#b5c7c1;font-size:13px}.nav a:hover{color:var(--mint)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:999px;padding:12px 19px;font-weight:750;font-size:13px;cursor:pointer}
+.btn-primary{background:var(--mint);color:#082018}.btn-ghost{border-color:var(--line);background:rgba(255,255,255,.035);color:#eaf4ef}
+.menu-btn{display:none;background:none;border:0;color:white;font-size:22px}
+.hero{padding:76px 0 45px;max-width:850px}.eyebrow,.kicker{color:var(--mint);font-size:10px;font-weight:850;letter-spacing:.18em;text-transform:uppercase}
+h1{font-size:clamp(42px,6vw,66px);line-height:1.03;letter-spacing:-.06em;margin:17px 0}.hero p{font-size:15px;color:#a9beb6;line-height:1.85;max-width:730px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.library-tools{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.filters{display:flex;gap:8px;flex-wrap:wrap}.filter{border:1px solid var(--line);background:rgba(255,255,255,.035);color:#b8cbc3;border-radius:999px;padding:9px 13px;font-size:11px;font-weight:700;cursor:pointer}.filter.active,.filter:hover{background:var(--mint);border-color:var(--mint);color:#06211f}
+.search{min-width:220px;max-width:300px;width:100%;border:1px solid var(--line);border-radius:999px;padding:11px 15px;background:#102326;color:#f3f7f4;font:inherit;font-size:12px}
+.video-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px;padding:28px 0 18px}
+.video-card{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:linear-gradient(150deg,rgba(255,255,255,.05),rgba(255,255,255,.015));transition:transform .2s,border-color .2s}
+.video-card:hover{transform:translateY(-3px);border-color:rgba(34,220,198,.45)}
+.thumb{display:block;position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,#153b3a,#0c2022);overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}.video-card:hover .thumb img{transform:scale(1.035)}
+.play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:rgba(5,20,20,.83);border:1px solid rgba(255,255,255,.55);color:white;font-size:19px;padding-left:3px;box-shadow:0 5px 24px #0008}
+.video-info{padding:17px 18px 19px}.video-meta{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:9px}
+.tag{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mint);font-weight:850}.language{font-size:9px;color:#829a92}
+.video-info h2{font-size:16px;line-height:1.35;letter-spacing:-.02em;margin:0 0 7px}.channel{font-size:10px;color:#b4c9c0;font-weight:700;margin-bottom:8px}.video-info p{font-size:11px;line-height:1.7;color:#9fb4ac;min-height:56px;margin:0 0 13px}
+.watch{display:inline-flex;align-items:center;gap:8px;color:var(--mint);font-size:11px;font-weight:800}
+.empty{display:none;padding:35px;text-align:center;color:#9fb4ac;border:1px dashed var(--line);border-radius:15px}
+.note{margin:20px 0;padding:17px 19px;border:1px solid rgba(34,220,198,.2);border-radius:15px;background:rgba(34,220,198,.045);font-size:12px;color:#a9c4bb;line-height:1.8}.note strong{color:#e5f5ef}
+.safety{margin:25px 0 55px;border:1px solid rgba(232,197,140,.25);background:rgba(232,197,140,.055);border-radius:15px;padding:17px 19px;color:#cbbd9f;font-size:11px;line-height:1.8}.safety strong{color:#f0d6a6}
+.footer{padding:30px 0 45px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:18px;align-items:center;color:#829a92;font-size:11px}.footer a{color:var(--mint)}
+@media(max-width:850px){.video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{gap:14px}}
+@media(max-width:620px){.wrap{width:min(100% - 28px,1160px)}.topbar{height:68px}.nav{display:none}.menu-btn{display:block}.hero{padding:55px 0 35px}.video-grid{grid-template-columns:1fr}.search{max-width:none}.footer{display:block}.footer>*{display:block;margin:8px 0}}
+</style>
+</head>
+<body>
+<header class="wrap topbar">
+<a class="brand" href="./" aria-label="FREEDOM home"><img src="./logo.svg" alt="FREEDOM"></a>
+<nav class="nav" id="nav"><a href="./#recovery">Recovery paths</a><a href="./#tracker">My progress</a><a href="./#learn">Learn</a><a href="./videos.html" aria-current="page">Video library</a><a href="./community.html">Community</a><a href="./#support">Get support</a></nav>
+<div><a class="btn btn-ghost" href="./">← Back to FREEDOM</a><button class="menu-btn" id="menu-btn" aria-label="Open menu">☰</button></div>
+</header>
+<main class="wrap">
+<section class="hero">
+<div class="eyebrow">FREE VIDEO LIBRARY · ENGLISH FIRST</div>
+<h1>Learn. Understand.<br><span style="color:var(--mint)">Move forward.</span></h1>
+<p>A growing collection of free YouTube videos selected to help you understand addiction, manage cravings, explore recovery and find trustworthy guidance. Videos open on their original YouTube pages so you can watch, save and revisit them.</p>
+<div class="hero-actions"><a class="btn btn-primary" href="#library">Explore the videos ↓</a><a class="btn btn-ghost" href="./#support">Find support</a></div>
+</section>
+<section id="library">
+<div class="library-tools">
+<div class="filters" aria-label="Filter videos">
+<button class="filter active" data-filter="all" aria-pressed="true">All videos</button>
+<button class="filter" data-filter="understanding" aria-pressed="false">Addiction basics</button>
+<button class="filter" data-filter="smoking" aria-pressed="false">Smoking</button>
+<button class="filter" data-filter="alcohol" aria-pressed="false">Alcohol & sobriety</button>
+<button class="filter" data-filter="sexual" aria-pressed="false">Porn & sexual habits</button>
+<button class="filter" data-filter="recovery" aria-pressed="false">Cravings & relapse</button>
+</div>
+<input class="search" id="video-search" type="search" placeholder="Search videos or channels…" aria-label="Search videos">
+</div>
+<div class="video-grid" id="video-grid">
+<article class="video-card" data-category="understanding" data-search="inside addicted human brain addiction science Nora Volkow NIDA">
+<a class="thumb" href="https://www.youtube.com/watch?v=F-sfiQZqG24" target="_blank" rel="noopener noreferrer"><img src="https://i.ytimg.com/vi/F-sfiQZqG24/hqdefault.jpg" alt="Video thumbnail: Inside the Addicted Human Brain" loading="lazy"><span class="play">▶</span></a>
+<div class="video-info"><div class="video-meta"><span class="tag">Addiction basics</span><span class="language">English</span></div><h2>Inside the Addicted Human Brain</h2><div class="channel">Dr. Nora Volkow · NIDA resource</div><p>A science-led introduction to how addiction affects the brain and why it is more than a simple matter of willpower.</p><a class="watch" href="https://www.youtube.com/watch?v=F-sfiQZqG24" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+</article>
+<article class="video-card" data-category="understanding" data-search="how overcome addiction substances behaviors Keith Humphreys Stanford Huberman Lab">
+<a class="thumb" href="https://www.youtube.com/watch?v=t6RCTP4fc9Q" target="_blank" rel="noopener noreferrer"><img src="https://i.ytimg.com/vi/t6RCTP4fc9Q/hqdefault.jpg" alt="Video thumbnail: How to Overcome Addiction to Substances or Behaviors" loading="lazy"><span class="play">▶</span></a>
+<div class="video-info"><div class="video-meta"><span class="tag">Addiction basics</span><span class="language">English</span></div><h2>How to Overcome Addiction to Substances or Behaviors</h2><div class="channel">Dr. Keith Humphreys · Huberman Lab</div><p>A long-form conversation with a Stanford addiction expert about treatment, recovery approaches and addictive behaviours.</p><a class="watch" href="https://www.youtube.com/watch?v=t6RCTP4fc9Q" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+</article>
+<article class="video-card" data-category="smoking" data-search="nicotine addiction withdrawal CDC quit smoking">
+<a class="thumb" href="https://www.youtube.com/watch?v=LwJhiBSQr48" target="_blank" rel="noopener noreferrer"><img src="https://i.ytimg.com/vi/LwJhiBSQr48/hqdefault.jpg" alt="Video thumbnail: Nicotine Addiction and Withdrawal" loading="lazy"><span class="play">▶</span></a>
+<div class="video-info"><div class="video-meta"><span class="tag">Smoking & nicotine</span><span class="language">English</span></div><h2>Nicotine Addiction and Withdrawal</h2><div class="channel">Centers for Disease Control and Prevention (CDC)</div><p>Understand nicotine dependence and common withdrawal experiences when working towards quitting tobacco.</p><a class="watch" href="https://www.youtube.com/watch?v=LwJhiBSQr48" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+</article>
+<article class="video-card" data-category="smoking" data-search="harms tobacco use benefits quitting CDC smoking">
+<a class="thumb" href="https://www.youtube.com/watch?v=z3C4xWplcag" target="_blank" rel="noopener noreferrer"><img src="https://i.ytimg.com/vi/z3C4xWplcag/hqdefault.jpg" alt="Video thumbnail: Harms of Tobacco Use and Benefits of Quitting" loading="lazy"><span class="play">▶</span></a>
+<div class="video-info"><div class="video-meta"><span class="tag">Smoking & nicotine</span><span class="language">English</span></div><h2>Harms of Tobacco Use and Benefits of Quitting</h2><div class="channel">Centers for Disease Control and Prevention (CDC)</div><p>Learn about the health impact of tobacco and the benefits that begin when you stop using it.</p><a class="watch" href="https://www.youtube.com/watch?v=z3C4xWplcag" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+</article>
+<article class="video-card" data-category="smoking" data-search="brief tobacco cessation interventions CDC quit">
+<a class="thumb" href="https://www.youtube.com/watch?v=2Phw5IN2TN4" target="_blank" rel="noopener noreferrer"><img src="https://i.ytimg.com/vi/2Phw5IN2TN4/hqdefault.jpg" alt="Video thumbnail: Brief Tobacco Cessation Interventions" loading="lazy"><span class="play">▶</span></a>
+<div class="video-info"><div class="video-meta"><span class="tag">Smoking & nicotine</span><span class="language">English</span></div><h2>Brief Tobacco Cessation Interventions</h2><div class="channel">Centers for Disease Control and Prevention (CDC)</div><p>A short educational resource about practical support and interventions that can help people quit tobacco.</p><a class="watch" href="https://www.youtube.com/watch?v=2Phw5IN2TN4" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+</article>
+<article class="video-card" data-category="alcohol" data-search="alcohol addiction detox begin recovery Stanford Anna Lembke">
+<a class="thumb" href="https://www.youtube.com/watch?v=VhIe9Y6t6mE" target="_blank" rel="noopener noreferrer"><img src="https://i.ytimg.com/vi/VhIe9Y6t6mE/hqdefault.jpg" alt="Video thumbnail: Alcohol Addiction How to Detox and Begin Recovery" loading="lazy"><span class="play">▶</span></a>
+<div class="video-info"><div class="video-meta"><span class="tag">Alcohol & sobriety</span><span class="language">English</span></div><h2>Alcohol Addiction: How to Detox & Begin Recovery</h2><div class="channel">Stanford Center for Health Education</div><p>Dr. Anna Lembke explains alcohol withdrawal, detoxification and the start of treatment and recovery.</p><a class="watch" href="https://www.youtube.com/watch?v=VhIe9Y6t6mE" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+</article>
+<article class="video-card" data-category="alcohol" data-search="journey addiction recovery Lisa story sobriety">
+<a class="thumb" href="https://www.youtube.com/watch?v=3KsgiMRp_v4" target="_blank" rel="noopener noreferrer"><img src="https://i.ytimg.com/vi/3KsgiMRp_v4/hqdefault.jpg" alt="Video thumbnail: The Journey From Addiction to Recovery Lisa's Story" loading="lazy"><span class="play">▶</span></a>
+<div class="video-info"><div class="video-meta"><span class="tag">Alcohol & sobriety</span><span class="language">English</span></div><h2>The Journey From Addiction to Recovery — Lisa's Story</h2><div class="channel">Texas Pictures Documentaries</div><p>A personal recovery story about seeking support, rebuilding life and sustaining long-term sobriety.</p><a class="watch" href="https://www.youtube.com/watch?v=3KsgiMRp_v4" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+</article>
+<article class="video-card" data-category="sexual" data-search="diagnosing porn addiction compulsive sexual behavior disorder Doc Snipes">
+<a class="thumb" href="https://www.youtube.com/watch?v=Ft0P1Edc7as" target="_blank" rel="noopener noreferrer"><img src="https://i.ytimg.com/vi/Ft0P1Edc7as/hqdefault.jpg" alt="Video thumbnail: Diagnosing Porn Addiction and Compulsive Sexual Behavior Disorder" loading="lazy"><span class="play">▶</span></a>
+<div class="video-info"><div class="video-meta"><span class="tag">Porn & sexual habits</span><span class="language">English</span></div><h2>Diagnosing Porn Use & Compulsive Sexual Behaviour</h2><div class="channel">Dr. Dawn-Elise Snipes · Doc Snipes</div><p>A clinician-led educational discussion of problematic pornography use, compulsive patterns and when behaviour may need support.</p><a class="watch" href="https://www.youtube.com/watch?v=Ft0P1Edc7as" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+</article>
+<article class="video-card" data-category="sexual" data-search="porn sex addiction recovery relationships Paula Hall">
+<a class="thumb" href="https://www.youtube.com/watch?v=-b4ZBM0wlYo" target="_blank" rel="noopener noreferrer"><img src="https://i.ytimg.com/vi/-b4ZBM0wlYo/hqdefault.jpg" alt="Video thumbnail: Porn and Sex Addiction Recovery Relationships and What Actually Works" loading="lazy"><span class="play">▶</span></a>
+<div class="video-info"><div class="video-meta"><span class="tag">Porn & sexual habits</span><span class="language">English</span></div><h2>Porn & Sex Addiction: Recovery, Relationships & What Helps</h2><div class="channel">Dr. Paula Hall · Interview</div><p>A discussion with a specialist psychotherapist about compulsive sexual behaviour, shame, relationships and recovery approaches.</p><a class="watch" href="https://www.youtube.com/watch?v=-b4ZBM0wlYo" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+</article>
+<article class="video-card" data-category="recovery" data-search="managing cravings avoiding triggers CDC coping">
+<a class="thumb" href="https://www.youtube.com/watch?v=wXd9nWrgMGQ" target="_blank" rel="noopener noreferrer"><img src="https://i.ytimg.com/vi/wXd9nWrgMGQ/hqdefault.jpg" alt="Video thumbnail: Managing Cravings and Avoiding Triggers" loading="lazy"><span class="play">▶</span></a>
+<div class="video-info"><div class="video-meta"><span class="tag">Cravings & relapse</span><span class="language">English</span></div><h2>Managing Cravings and Avoiding Triggers</h2><div class="channel">Centers for Disease Control and Prevention (CDC)</div><p>Practical education on recognising triggers and planning for moments when cravings feel difficult.</p><a class="watch" href="https://www.youtube.com/watch?v=wXd9nWrgMGQ" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+</article>
+<article class="video-card" data-category="recovery" data-search="handling setbacks relapse prevention CDC">
+<a class="thumb" href="https://www.youtube.com/watch?v=7P2LZCmzW_8" target="_blank" rel="noopener noreferrer"><img src="https://i.ytimg.com/vi/7P2LZCmzW_8/hqdefault.jpg" alt="Video thumbnail: Handling Setbacks" loading="lazy"><span class="play">▶</span></a>
+<div class="video-info"><div class="video-meta"><span class="tag">Cravings & relapse</span><span class="language">English</span></div><h2>Handling Setbacks</h2><div class="channel">Centers for Disease Control and Prevention (CDC)</div><p>Learn to treat a setback as a signal to adjust your plan rather than a reason to give up.</p><a class="watch" href="https://www.youtube.com/watch?v=7P2LZCmzW_8" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+</article>
+<article class="video-card" data-category="recovery" data-search="relapse prevention II Prabhat Chand NIMHANS">
+<a class="thumb" href="https://www.youtube.com/watch?v=AEOIgntdzu4" target="_blank" rel="noopener noreferrer"><img src="https://i.ytimg.com/vi/AEOIgntdzu4/hqdefault.jpg" alt="Video thumbnail: Relapse Prevention II" loading="lazy"><span class="play">▶</span></a>
+<div class="video-info"><div class="video-meta"><span class="tag">Cravings & relapse</span><span class="language">English</span></div><h2>Relapse Prevention — Part II</h2><div class="channel">Prof. Prabhat Chand · NIMHANS VKN</div><p>An educational lecture from India's National Institute of Mental Health and Neuro Sciences knowledge network.</p><a class="watch" href="https://www.youtube.com/watch?v=AEOIgntdzu4" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+</article>
+</div>
+<div class="empty" id="no-results">No videos match that search. Try another word or category.</div>
+<div class="note"><strong>A note about masturbation:</strong> Masturbation itself is a common sexual behaviour and is not automatically harmful or an addiction. This library focuses on compulsive patterns that feel out of control or cause significant distress or disruption. For medically reviewed information, read the <a href="https://www.issm.info/sexual-health-qa/what-are-the-myths-and-facts-about-masturbation" target="_blank" rel="noopener noreferrer" style="color:var(--mint);text-decoration:underline">International Society for Sexual Medicine's myths-and-facts guide ↗</a>.</div>
+<div class="safety"><strong>Important safety note about alcohol:</strong> If you may be physically dependent on alcohol, do not stop suddenly or attempt a home detox without medical advice. Withdrawal can be dangerous and sometimes life-threatening. Seek urgent medical care for seizures, confusion, hallucinations or severe shaking. These videos are educational, not a substitute for professional care.</div>
+</section>
+</main>
+<footer class="wrap footer"><span>© <span id="year"></span> FREEDOM · Built for progress, not perfection.</span><span>Free educational videos · English-first · <a href="./">Back to homepage</a></span></footer>
+<script>
+(function(){
+const buttons=Array.from(document.querySelectorAll('.filter'));
+const cards=Array.from(document.querySelectorAll('.video-card'));
+const search=document.getElementById('video-search');
+const empty=document.getElementById('no-results');
+let active='all';
+function update(){
+ const q=search.value.trim().toLowerCase();let shown=0;
+ cards.forEach(card=>{
+  const category=card.dataset.category;
+  const matchesCategory=active==='all'||category===active;
+  const matchesSearch=!q||(card.dataset.search+' '+card.innerText).toLowerCase().includes(q);
+  const visible=matchesCategory&&matchesSearch;
+  card.hidden=!visible;if(visible)shown++;
+ });
+ empty.style.display=shown?'none':'block';
+}
+buttons.forEach(button=>button.addEventListener('click',()=>{
+ active=button.dataset.filter;
+ buttons.forEach(b=>{const selected=b===button;b.classList.toggle('active',selected);b.setAttribute('aria-pressed',String(selected))});
+ update();
+}));
+search.addEventListener('input',update);
+document.getElementById('year').textContent=new Date().getFullYear();
+document.getElementById('menu-btn').addEventListener('click',()=>document.getElementById('nav').classList.toggle('open'));
+})();
+</script>
+</body>
+</html>
