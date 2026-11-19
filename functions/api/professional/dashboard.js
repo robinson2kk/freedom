@@ -13,7 +13,7 @@ export async function onRequestGet({ request, env }) {
   const user = await currentUser(request, env);
   if (!user) return json({ error: "Please sign in first." }, 401);
   const app = await env.DB.prepare(
-    "SELECT full_name, marketplace_category, applicant_type, status, verification_expires_at FROM professional_applications WHERE lower(email)=lower(?) ORDER BY submitted_at DESC LIMIT 1"
+    "SELECT full_name, marketplace_category, applicant_type, status, verification_expires_at FROM professional_applications WHERE linked_user_id=? ORDER BY submitted_at DESC LIMIT 1"
   ).bind(user.id).first();
   if (!app) return json({ error: "No professional application was found for this account." }, 404);
   if (app.status !== "verified") return json({ error: "Your professional application must be approved before accessing the dashboard." }, 403);
