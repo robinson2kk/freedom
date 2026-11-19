@@ -18,7 +18,7 @@
 - `migrations/007_marketplace_foundation.sql`: categories, services, slots, bookings, payments, commissions, settlements, refunds, disputes, webhook idempotency and audit ledger.
 - `functions/api/marketplace/categories.js`: read-only category endpoint.
 
-## Financial invariants
+## Current implementation additions\n- `professional-dashboard.html`: authenticated dashboard for approved providers to create service drafts and availability.\n- `functions/api/professional/dashboard.js`: approved provider identity endpoint.\n- `functions/api/professional/services.js`: provider-owned service draft API; drafts are inactive by default.\n- `functions/api/professional/slots.js`: provider-owned availability API with overlap and duration checks.\n- `functions/api/admin/marketplace/services.js` and `admin-marketplace-services.html`: admin service content review; approval does not activate listing or payment.\n- Service review status and reviewer audit details are stored in the marketplace migration.\n\n## Financial invariants
 1. Amounts are integer paise, INR.
 2. Commission is 15% of the eligible booking gross amount, stored in basis points (1500).
 3. Provider gross share is the remainder before gateway charges, taxes, refunds and other contractually disclosed adjustments.
