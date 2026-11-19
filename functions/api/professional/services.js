@@ -35,7 +35,7 @@ export async function onRequestPost({ request, env }) {
   if ((count?.n || 0) >= 10) return json({ error: "You can create up to 10 draft services." }, 429);
   const id = randomHex(16);
   await env.DB.prepare(
-    "INSERT INTO professional_services(id,application_id,title,description,duration_minutes,price_paise,currency,delivery_mode,active) VALUES(?,?,?,?,?,'INR',?,0)"
+    "INSERT INTO professional_services(id,application_id,title,description,duration_minutes,price_paise,currency,delivery_mode,active) VALUES(?,?,?,?,?,?,'INR',?,0)"
   ).bind(id, app.id, title, description || null, duration, price * 100, mode).run();
   return json({ ok: true, serviceId: id, status: "pending_review", message: "Service saved as a draft. FREEDOM admin review is required before it can be listed." }, 201);
 }
