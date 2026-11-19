@@ -15,7 +15,7 @@ body{background:radial-gradient(ellipse at 75% -15%,rgba(20,180,168,.2),transpar
 a{text-decoration:none;color:inherit}.wrap{width:min(1160px,calc(100% - 40px));margin:auto}
 .topbar{height:78px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
 .brand img{display:block;width:170px;height:auto;max-height:38px;object-fit:contain}
-.nav{display:flex;align-items:center;gap:25px;color:#b5c7c1;font-size:13px}.nav a:hover{color:var(--mint)}
+.nav{display:flex;align-items:center;gap:12px;flex:1;justify-content:center;color:#b5c7c1;font-size:13px}.nav a:hover{color:var(--mint)}.nav-group{position:relative}.nav-group summary{list-style:none;display:flex;align-items:center;gap:7px;padding:12px 14px;border:1px solid transparent;border-radius:12px;cursor:pointer;white-space:nowrap;color:#d5e4de}.nav-group summary::-webkit-details-marker{display:none}.nav-group summary span{color:var(--mint);font-size:15px}.nav-group[open] summary{border-color:var(--line);background:rgba(255,255,255,.04)}.nav-menu{position:absolute;top:calc(100% + 9px);left:0;min-width:205px;padding:8px;border:1px solid rgba(100,210,205,.2);border-radius:14px;background:#102326;box-shadow:0 18px 45px #0008;display:grid;gap:3px;z-index:25}.nav-menu a{display:block;padding:10px 12px;border-radius:9px;color:#b8cbc3;white-space:nowrap}.nav-menu a:hover{background:rgba(34,220,198,.09);color:var(--mint)}.topbar{position:relative;gap:18px}.brand{flex-shrink:0}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:999px;padding:12px 19px;font-weight:750;font-size:13px;cursor:pointer}
 .btn-primary{background:var(--mint);color:#082018}.btn-ghost{border-color:var(--line);background:rgba(255,255,255,.035);color:#eaf4ef}
 .menu-btn{display:none;background:none;border:0;color:white;font-size:22px}
@@ -39,14 +39,14 @@ h1{font-size:clamp(42px,6vw,66px);line-height:1.03;letter-spacing:-.06em;margin:
 .note{margin:20px 0;padding:17px 19px;border:1px solid rgba(34,220,198,.2);border-radius:15px;background:rgba(34,220,198,.045);font-size:12px;color:#a9c4bb;line-height:1.8}.note strong{color:#e5f5ef}
 .safety{margin:25px 0 55px;border:1px solid rgba(232,197,140,.25);background:rgba(232,197,140,.055);border-radius:15px;padding:17px 19px;color:#cbbd9f;font-size:11px;line-height:1.8}.safety strong{color:#f0d6a6}
 .footer{padding:30px 0 45px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:18px;align-items:center;color:#829a92;font-size:11px}.footer a{color:var(--mint)}
-@media(max-width:850px){.video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{gap:14px}}
+@media(max-width:850px){.video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{display:none;position:absolute;top:78px;left:0;right:0;padding:14px;background:#0d1b1d;flex-direction:column;align-items:stretch;justify-content:flex-start;z-index:20;border:1px solid var(--line);border-radius:0 0 16px 16px;gap:5px}.nav.open{display:flex}.nav-group summary{justify-content:space-between;width:100%}.nav-menu{position:static;min-width:0;margin:5px 0 8px 10px;box-shadow:none;background:rgba(0,0,0,.15)}.nav-menu a{white-space:normal}}
 @media(max-width:620px){.wrap{width:min(100% - 28px,1160px)}.topbar{height:68px}.nav{display:none}.menu-btn{display:block}.hero{padding:55px 0 35px}.video-grid{grid-template-columns:1fr}.search{max-width:none}.footer{display:block}.footer>*{display:block;margin:8px 0}}
 </style>
 </head>
 <body>
 <header class="wrap topbar">
 <a class="brand" href="./" aria-label="FREEDOM home"><img src="./logo.svg" alt="FREEDOM"></a>
-<nav class="nav" id="nav"><a href="./#recovery">Recovery paths</a><a href="./#tracker">My progress</a><a href="./#learn">Learn</a><a href="./videos.html" aria-current="page">Video library</a><a href="./community.html">Community</a><a href="./#support">Get support</a></nav>
+<nav class="nav" id="nav" aria-label="Main navigation"><details class="nav-group"><summary>Recovery <span aria-hidden="true">⌄</span></summary><div class="nav-menu"><a href="./#recovery">Recovery paths</a><a href="./#tracker">My progress</a><a href="./account.html">My account</a></div></details><details class="nav-group"><summary>Resources <span aria-hidden="true">⌄</span></summary><div class="nav-menu"><a href="./#learn">Learn</a><a href="./videos.html" aria-current="page">Video library</a></div></details><details class="nav-group"><summary>About &amp; support <span aria-hidden="true">⌄</span></summary><div class="nav-menu"><a href="./about.html">About FREEDOM</a><a href="./community.html">Community</a><a href="./#support">Get support</a><a href="./professionals.html">For professionals</a></div></details></nav>
 <div><a class="btn btn-ghost" href="./">← Back to FREEDOM</a><button class="menu-btn" id="menu-btn" aria-label="Open menu">☰</button></div>
 </header>
 <main class="wrap">
@@ -149,7 +149,7 @@ buttons.forEach(button=>button.addEventListener('click',()=>{
 }));
 search.addEventListener('input',update);
 document.getElementById('year').textContent=new Date().getFullYear();
-document.getElementById('menu-btn').addEventListener('click',()=>document.getElementById('nav').classList.toggle('open'));
+document.getElementById('menu-btn').addEventListener('click',()=>document.getElementById('nav').classList.toggle('open'));document.getElementById('nav').querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('nav').classList.remove('open');document.getElementById('nav').querySelectorAll('details').forEach(d=>d.open=false)}));
 })();
 </script>
 </body>
