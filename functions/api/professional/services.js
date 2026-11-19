@@ -4,8 +4,8 @@ async function provider(request, env) {
   const user = await currentUser(request, env);
   if (!user) return null;
   return env.DB.prepare(
-    "SELECT id, full_name, marketplace_category FROM professional_applications WHERE lower(email)=lower(?) AND status='verified' ORDER BY submitted_at DESC LIMIT 1"
-  ).bind(user.email).first();
+    "SELECT id, full_name, marketplace_category FROM professional_applications WHERE linked_user_id=? AND status='verified' ORDER BY submitted_at DESC LIMIT 1"
+  ).bind(user.id).first();
 }
 
 export async function onRequestGet({ request, env }) {
