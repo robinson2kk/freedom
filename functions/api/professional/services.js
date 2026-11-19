@@ -12,7 +12,7 @@ export async function onRequestGet({ request, env }) {
   const app = await provider(request, env);
   if (!app) return json({ error: "An approved professional account is required." }, 403);
   const rows = await env.DB.prepare(
-    "SELECT id,title,description,duration_minutes,price_paise,currency,delivery_mode,active,created_at FROM professional_services WHERE application_id=? ORDER BY created_at DESC"
+    "SELECT id,title,description,duration_minutes,price_paise,currency,delivery_mode,active,review_status,review_notes,created_at FROM professional_services WHERE application_id=? ORDER BY created_at DESC"
   ).bind(app.id).all();
   return json({ services: rows.results || [] });
 }
