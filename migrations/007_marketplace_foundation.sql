@@ -30,6 +30,10 @@ CREATE TABLE IF NOT EXISTS professional_services (
   currency TEXT NOT NULL DEFAULT 'INR',
   delivery_mode TEXT NOT NULL CHECK(delivery_mode IN ('online','in_person','both')),
   active INTEGER NOT NULL DEFAULT 0,
+  review_status TEXT NOT NULL DEFAULT 'pending' CHECK(review_status IN ('pending','approved','rejected')),
+  review_notes TEXT,
+  reviewed_by TEXT,
+  reviewed_at TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now')),
   FOREIGN KEY(application_id) REFERENCES professional_applications(id)
