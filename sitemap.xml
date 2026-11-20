@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://freedom-e0i.pages.dev/</loc></url>
+  <url><loc>https://freedom-e0i.pages.dev/about.html</loc></url>
+  <url><loc>https://freedom-e0i.pages.dev/books.html</loc></url>
+  <url><loc>https://freedom-e0i.pages.dev/videos.html</loc></url>
+  <url><loc>https://freedom-e0i.pages.dev/urge.html</loc></url>
+  <url><loc>https://freedom-e0i.pages.dev/companion.html</loc></url>
+  <url><loc>https://freedom-e0i.pages.dev/help.html</loc></url>
+  <url><loc>https://freedom-e0i.pages.dev/community.html</loc></url>
+  <url><loc>https://freedom-e0i.pages.dev/professionals.html</loc></url>
+  <url><loc>https://freedom-e0i.pages.dev/professionals-directory.html</loc></url>
+  <url><loc>https://freedom-e0i.pages.dev/support.html</loc></url>
+  <url><loc>https://freedom-e0i.pages.dev/feedback.html</loc></url>
   <url><loc>https://freedom-e0i.pages.dev/privacy.html</loc></url>
   <url><loc>https://freedom-e0i.pages.dev/terms.html</loc></url>
-  <url><loc>https://freedom-e0i.pages.dev/urge.html</loc></url>
-  <url><loc>https://freedom-e0i.pages.dev/help.html</loc></url>
-<url><loc>https://freedom-e0i.pages.dev/professionals-directory.html</loc></url>
-  <url><loc>https://freedom-e0i.pages.dev/companion.html</loc></url>
-  <url><loc>https://freedom-e0i.pages.dev/feedback.html</loc></url>
 </urlset>
