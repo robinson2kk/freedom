@@ -150,7 +150,7 @@ function render(){
 $('stat-total').textContent=entries.length;const week=new Date();week.setHours(0,0,0,0);week.setDate(week.getDate()-6);const from=[week.getFullYear(),String(week.getMonth()+1).padStart(2,'0'),String(week.getDate()).padStart(2,'0')].join('-');
 const weekEntries=entries.filter(e=>e.log_date>=from);$('stat-week').textContent=weekEntries.length;const helpful=weekEntries.filter(e=>e.coping_action).length;$('tracker-insight').textContent=weekEntries.length?('You logged '+weekEntries.length+' check-in'+(weekEntries.length===1?'':'s')+' in the last 7 days. '+(helpful?helpful+' included a coping action. ':'')+'Look for patterns with curiosity, not judgement.'):'Your weekly reflection will appear as you log check-ins.';
 const list=entries.slice().sort((a,b)=>(b.log_date||'').localeCompare(a.log_date||'')).slice(0,6);
-$('log-list').innerHTML=list.length?list.map(e=>'<div class="log-item"><span><b>'+esc(names[e.category]||e.category)+'</b><br><small>'+esc(events[e.event_type]||e.event_type)+'</small></span><small>'+esc(e.log_date)+'</small></div>').join(''):'<div class="empty">Your check-ins will appear here. Start with one small entry.</div>';
+$('log-list').innerHTML=list.length?list.map(e=>'<div class="log-item"><span><b>'+esc(names[e.category]||e.category)+'</b><br><small>'+esc(events[e.event_type]||e.event_type)+(e.trigger_context?' · '+esc(triggerLabels[e.trigger_context]||e.trigger_context):'')+(e.coping_action?' · '+esc(copingLabels[e.coping_action]||e.coping_action):'')+'</small></span><small>'+esc(e.log_date)+'</small></div>').join(''):'<div class="empty">Your check-ins will appear here. Start with one small entry.</div>';
 }
 function toast(s){$('toast').textContent=s;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2500)}
 async function initialiseTracker(){
@@ -189,7 +189,7 @@ try{
   const response=await fetch('/api/checkins',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry)});
   const payload=await response.json();if(!response.ok)throw new Error(payload.error||'Could not save your account check-in.');
   const refresh=await fetch('/api/checkins',{credentials:'same-origin',cache:'no-store'});const data=await refresh.json();if(!refresh.ok)throw new Error(data.error||'Saved, but could not refresh your check-ins.');
-  entries=Array.isArray(data.entries)?data.entries:[];render();toast('Check-in saved to your private account.');
+  entries=Array.isArray(data.entries)?data.entries:[];render();toast(payload.reflection_saved===false?'Check-in saved. Run the tracker database update to sync optional reflections.':'Check-in saved to your private account.');
  }else{
   entries.push(entry);if(persist())toast('Check-in saved on this device.');else entries.pop();
  }
