@@ -5,7 +5,7 @@
 FREEDOM is a free, judgment-free recovery education website with guided urge support, personal check-ins, a recovery companion, community resources, feedback and an AI assistant named Ruby.
 
 ## Hosting and deployment
-- Existing site: Cloudflare Pages project `freedom`
+- Existing site URL: `https://freedom-e0i.pages.dev` (the Wrangler `name` is `freedom`; the Pages hostname has its own project slug)
 - Git repository: `robinson2kk/freedom`, branch `main`
 - Existing D1 database binding: `DB`, database name `freedom-db`
 - Pages output directory: repository root
@@ -24,7 +24,7 @@ Skip the login command if Wrangler is already authenticated. Confirm the target 
 
 ## Ruby AI setup
 Ruby's Pages Function uses the Cloudflare Workers AI binding `env.AI`. For Pages Functions, add this binding in the Cloudflare dashboard:
-1. Open Workers & Pages → the existing `freedom` Pages project.
+1. Open Workers & Pages → select the Pages project serving `freedom-e0i.pages.dev`.
 2. Open Settings → Functions → Bindings.
 3. Add a Workers AI binding named `AI`.
 4. Save and trigger a new production deployment.
