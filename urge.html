@@ -27,15 +27,15 @@
 {title:"Reconnect with the present",copy:"Notice five things you can see, four things you can feel and three things you can hear. Let your attention settle on the room around you."},
 {title:"Choose your next small action",copy:"Ask: what would make the next ten minutes safer or easier? Pick one practical action, or contact someone you trust. A difficult feeling does not require an immediate decision."}
 ];let remaining=300,step=0,running=false,interval=null,started=false;
-function show(){const s=steps[step];$('step-count').textContent='Step '+(step+1)+' of 5';$('step-title').textContent=s.title;$('step-copy').textContent=s.copy;$('progress').style.width=(step/5*100)+'%';$('next').disabled=!started;$('pause').disabled=!started;$('start').textContent=started?(running?'Running…':'Resume timer'):'Start five minutes';}
+function show(){const s=steps[step];$('step-count').textContent='Step '+(step+1)+' of 5';$('step-title').textContent=s.title;$('step-copy').textContent=s.copy;$('progress').style.width=(step/5*100)+'%';$('next').disabled=!started;$('pause').disabled=!started;$('next').textContent=step===4?'Finish exercise':'Next step';$('start').textContent=started?(running?'Running…':'Resume timer'):'Start five minutes';}
 function clock(){const m=String(Math.floor(remaining/60)).padStart(2,'0'),s=String(remaining%60).padStart(2,'0');$('timer').textContent=m+':'+s}
 function stop(){if(interval)clearInterval(interval);interval=null;running=false}
 function finish(){stop();$('session').style.display='none';$('finish').style.display='block';$('progress').style.width='100%'}
-function tick(){remaining--;clock();if(remaining<=0){finish();return}const elapsed=300-remaining;const target=Math.min(4,Math.floor(elapsed/60));if(target!==step){step=target;show()}}
+function tick(){remaining--;clock();if(remaining<=0){finish();return}const elapsed=300-remaining;const target=Math.min(4,Math.floor(elapsed/60));if(target>step){step=target;show()}}
 $('start').addEventListener('click',()=>{if(!started){started=true;$('trigger').disabled=true;$('status').textContent='Timer running. Follow the steps at your own pace.'}if(running)return;running=true;show();interval=setInterval(tick,1000)});
 $('pause').addEventListener('click',()=>{stop();$('status').textContent='Timer paused. Resume whenever you are ready.';show()});
-$('next').addEventListener('click',()=>{if(!started)return;if(step<4){step++;show()}else{$('step-copy').textContent='You have reached the final step. Let the timer finish, or choose to end the exercise now.';$('next').textContent='Finish exercise';$('next').onclick=finish}});
-$('again').addEventListener('click',()=>{stop();remaining=300;step=0;started=false;$('trigger').disabled=false;$('session').style.display='block';$('finish').style.display='none';$('next').textContent='Next step';$('next').onclick=null;$('status').textContent='You can pause or leave at any time. Nothing you choose here is sent to FREEDOM.';clock();show()});
+$('next').addEventListener('click',()=>{if(!started)return;if(step<4){step++;show()}else finish()});
+$('again').addEventListener('click',()=>{stop();remaining=300;step=0;started=false;$('trigger').disabled=false;$('session').style.display='block';$('finish').style.display='none';$('next').textContent='Next step';$('status').textContent='You can pause or leave at any time. Nothing you choose here is sent to FREEDOM.';clock();show()});
 clock();show();
 })();
 </script></body></html>
