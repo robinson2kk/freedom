@@ -2,18 +2,48 @@
 
 **Break the Habit. Reclaim Your Life.**
 
-A free, static self-help and recovery education website. The check-in tracker stores entries in the visitor's own browser using localStorage. It does not provide accounts, cloud sync, medical diagnosis, or treatment.
+FREEDOM is a free, judgment-free recovery education website with guided urge support, personal check-ins, a recovery companion, community resources, feedback and an AI assistant named Ruby.
 
-## Enable GitHub Pages
-1. Open repository **Settings → Pages**.
-2. Under **Build and deployment**, choose **Deploy from a branch**.
-3. Select branch **main** and folder **/ (root)**, then Save.
-4. After publishing, the site should be available at https://robinson2kk.github.io/freedom/.
+## Hosting and deployment
+- Existing site: Cloudflare Pages project `freedom`
+- Git repository: `robinson2kk/freedom`, branch `main`
+- Existing D1 database binding: `DB`, database name `freedom-db`
+- Pages output directory: repository root
+
+GitHub changes are source changes. They become live only after the connected Cloudflare Pages deployment succeeds.
+
+## Database migrations
+After pulling latest `main`, apply pending migrations to the existing remote database from the repository root:
+
+```bash
+npx wrangler login
+npx wrangler d1 migrations apply freedom-db --remote
+```
+
+Skip the login command if Wrangler is already authenticated. Confirm the target account/database before applying. Migration `010_companion_feedback.sql` creates the feedback queue and rate-limit table; it does not reset existing data.
+
+## Ruby AI setup
+Ruby's Pages Function uses the Cloudflare Workers AI binding `env.AI`. For Pages Functions, add this binding in the Cloudflare dashboard:
+1. Open Workers & Pages → the existing `freedom` Pages project.
+2. Open Settings → Functions → Bindings.
+3. Add a Workers AI binding named `AI`.
+4. Save and trigger a new production deployment.
+
+The Ruby API uses `@cf/zai-org/glm-4.7-flash`. If the binding is absent, the endpoint returns a temporary-unavailable response; no API key is exposed in browser code.
+
+## Local development
+Use a recent Node.js release and Wrangler:
+
+```bash
+npx wrangler pages dev .
+```
+
+For full local API testing, configure a local D1 database and Workers AI binding using Cloudflare's current Pages documentation.
 
 ## Privacy and safety
-- Tracker entries remain on the current device/browser; clearing browser storage can delete them.
-- Do not enter names or identifying/intimate details.
-- General educational information only, not a substitute for qualified care.
-- Alcohol withdrawal can be dangerous; anyone who may be physically dependent should seek medical advice before stopping.
-
-Before promoting widely, add a reviewed privacy policy, terms, local crisis resources, and clinical review. Avoid behavioural ad tracking on sensitive recovery pages.
+- Guest check-ins and companion goals are stored in the visitor's browser.
+- Signed-in check-ins are stored in the existing private D1 account.
+- Ruby chat history is held in the page while open and is not persisted by the FREEDOM endpoint; Cloudflare Workers AI processes prompts to generate replies.
+- Feedback is stored in D1 for authorised administrator review.
+- FREEDOM is educational self-help, not diagnosis, treatment or emergency care.
+- Anyone who may be physically dependent on alcohol should seek medical advice before stopping; withdrawal can be dangerous.
