@@ -1,0 +1,14 @@
+{
+  "id": "/",
+  "name": "FREEDOM — Recovery Companion",
+  "short_name": "FREEDOM",
+  "description": "A private-first space for recovery education, urge-management tools and healthier habits.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#061619",
+  "theme_color": "#061619",
+  "icons": [
+    { "src": "/logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
