@@ -12,10 +12,14 @@ function automatedSafetyCheck(message) {
     { pattern: /(?:\+?\d[\d .()\-]{7,}\d)/, reason: "Please don't share phone numbers." },
     { pattern: /\b(?:kill yourself|go die|i will kill|i'll kill|threaten(?:ing)?)\b/i, reason: "Threatening or self-harm encouraging language isn't allowed." },
     { pattern: /\b(?:idiot|moron|retard|stfu|f\*\*?k you|shut up)\b/i, reason: "Please rewrite this respectfully." },
+    { pattern: /\b(?:kill yourself|you should die|go end your life|self harm yourself)\b/i, reason: "Encouraging self-harm is not allowed. Please rewrite this safely. If someone may be in immediate danger, direct them to emergency help." },
+    { pattern: /\b(?:send me money|investment opportunity|double your money|crypto signal|work from home earn|dm me for a loan)\b/i, reason: "Potential solicitation or spam is not allowed in the recovery community." },
+    { pattern: /\b(?:buy pills from me|sell prescription|without prescription)\b/i, reason: "Medication sales and unsafe treatment advice are not allowed." },
     { pattern: /\b(?:stop taking (?:your )?(?:medication|medicine|meds)|quit alcohol cold turkey|stop your prescribed)\b/i, reason: "Unsafe medical instructions aren't allowed. Encourage people to speak with a qualified professional." }
   ];
   for (const check of checks) if (check.pattern.test(message)) return check.reason;
   if (/(.)\1{9,}/i.test(message)) return "Please remove repeated characters and try again.";
+  if (/\b(?:n[i1]gg(?:er|a)|f[a4]gg?ot|k[i1]ke|sp[i1]c)\b/i.test(message)) return "Hateful slurs are not allowed. Please keep the space respectful.";
   return null;
 }
 
