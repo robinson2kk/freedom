@@ -2,3 +2,36 @@
 /* Shared accessibility defaults */
 :focus-visible{outline:3px solid var(--brand);outline-offset:3px}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* Mobile layout polish — preserve FREEDOM's existing dark-teal and mint design */
+html{min-width:320px;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{min-width:320px;overflow-x:hidden}
+img,video,iframe,svg,canvas{max-width:100%}
+input,select,textarea,button{max-width:100%}
+@media(max-width:700px){
+  body{overflow-wrap:break-word}
+  main,header,footer,section,article,aside{min-width:0}
+  .wrap{width:calc(100% - 28px)!important;max-width:100%}
+  .grid,.cards,.articles,.two-col,.trust-strip,.community-grid,.tracker-shell,.form-row{grid-template-columns:minmax(0,1fr)!important}
+  .panel,.card,.path-card,.tracker-form,.tracker-shell{min-width:0;max-width:100%}
+  .panel{padding:16px}
+  h1{font-size:clamp(2rem,9vw,3.25rem);overflow-wrap:anywhere}
+  h2{overflow-wrap:anywhere}
+  p{overflow-wrap:anywhere}
+  button,.btn,.action,.buy,.filter{min-height:42px}
+  input,select,textarea{font-size:16px!important;min-height:44px}
+  table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  pre,code{overflow-wrap:anywhere;white-space:pre-wrap}
+  .hero{padding-top:38px!important;padding-bottom:28px!important}
+  .footer,.footer-inner{gap:12px;flex-wrap:wrap}
+  .nav-menu{max-width:calc(100vw - 48px)}
+}
+@media(max-width:420px){
+  .wrap{width:calc(100% - 24px)!important}
+  .panel,.card{border-radius:15px}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .stat{min-width:0;overflow-wrap:anywhere}
+  .stat b{font-size:clamp(19px,7vw,25px)}
+  .filters{gap:6px}
+  .filter{padding:8px 10px;font-size:10px}
+}
