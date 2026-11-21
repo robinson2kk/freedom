@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /admin-feedback.html
+Disallow: /admin/
+Disallow: /api/
+Disallow: /account.html
 
 Sitemap: https://freedom-e0i.pages.dev/sitemap.xml
