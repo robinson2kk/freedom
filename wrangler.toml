@@ -7,7 +7,3 @@ binding = "DB"
 database_name = "freedom-db"
 database_id = "84434484-7778-4161-af69-7ea65ca18f41"
 migrations_dir = "migrations"
-
-[[r2_buckets]]
-binding = "PROFESSIONAL_DOCS"
-bucket_name = "freedom-professional-documents"
