@@ -1,7 +1,13 @@
-import { json, secureHeaders } from "../_lib.js";
+import { json, secureHeaders, randomHex, sha256 } from "../_lib.js";
 const clean=(v,max=500)=>String(v??"").trim().slice(0,max);
 export async function onRequestPost({request,env}){
  if(!secureHeaders(request))return json({error:"Request origin could not be verified."},403);
+ const ip=request.headers.get("CF-Connecting-IP")||"unknown";
+ const ipHash=await sha256(ip+":"+String(env.RUBY_RATE_SALT||"freedom-public"));
+ await env.DB.prepare("INSERT INTO public_request_limits (id,ip_hash,route) VALUES (?,?,?)").bind(randomHex(12),ipHash,"professional-documents").run();
+ const recent=await env.DB.prepare("SELECT COUNT(*) AS total FROM public_request_limits WHERE ip_hash=? AND route='professional-documents' AND created_at > datetime('now','-15 minutes')").bind(ipHash).first();
+ if(Number(recent?.total||0)>8)return json({error:"Too many attempts. Please wait a little before trying again."},429);
+ await env.DB.prepare("DELETE FROM public_request_limits WHERE created_at < datetime('now','-1 day')").run();
  let b;try{b=await request.json()}catch{return json({error:"Please check the form and try again."},400)}
  const id=clean(b.applicationId,64),email=clean(b.email,254).toLowerCase(),link=clean(b.supportingDocumentsUrl,500);
  if(!id||!email||!link)return json({error:"Complete all three fields."},400);
