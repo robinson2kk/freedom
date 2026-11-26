@@ -42,15 +42,15 @@
 <p class="muted"><a href="./professional-withdrawal.html">Already applied? Request application withdrawal or profile removal.</a></p>
 <section class="panel" id="apply">
 <h2>Professional application</h2>
-<p>Fields marked required must be completed. You can leave optional contact and profile details blank.</p>
+<p>Fields marked required must be completed. Qualified professionals must provide their qualification details and professional registration body and number. Peer supporters and volunteers are not required to provide professional registration details.</p>
 <form id="application-form" class="application-form">
 <div class="field"><label for="fullName">Full name *</label><input id="fullName" name="fullName" maxlength="100" autocomplete="name" required></div>
 <div class="field"><label for="email">Email address *</label><input id="email" name="email" type="email" maxlength="254" autocomplete="email" required></div>
 <div class="field"><label for="phone">Mobile number</label><input id="phone" name="phone" type="tel" maxlength="25" autocomplete="tel"></div>
 <div class="field"><label for="applicantType">I am applying as *</label><select id="applicantType" name="applicantType" required><option value="">Choose one</option><option value="professional">Qualified professional</option><option value="peer">Trained peer supporter</option><option value="volunteer">Volunteer contributor</option></select></div>
-<div class="field full"><label for="qualifications">Qualifications and training</label><textarea id="qualifications" name="qualifications" maxlength="500" placeholder="List relevant qualifications and training. Do not include document numbers."></textarea></div>
-<div class="field"><label for="registrationBody">Registration / licensing body</label><input id="registrationBody" name="registrationBody" maxlength="200" placeholder="If applicable"></div>
-<div class="field"><label for="registrationNumber">Professional registration number</label><input id="registrationNumber" name="registrationNumber" maxlength="100" placeholder="If applicable"></div>
+<div class="field full"><label for="qualifications">Qualifications and training</label><textarea id="qualifications" name="qualifications" maxlength="500" placeholder="List your degree, institution and relevant training." ></textarea></div>
+<div class="field"><label for="registrationBody">Registration / licensing body</label><input id="registrationBody" name="registrationBody" maxlength="200" placeholder="e.g. NCAHP, RCI or other applicable regulator"></div>
+<div class="field"><label for="registrationNumber">Professional registration number</label><input id="registrationNumber" name="registrationNumber" maxlength="100" placeholder="Enter your professional registration number"></div>
 <div class="field"><label for="experienceYears">Relevant experience (years)</label><input id="experienceYears" name="experienceYears" type="number" min="0" max="60"></div>
 <div class="field"><label for="supportAreas">Areas you can support *</label><input id="supportAreas" name="supportAreas" maxlength="700" placeholder="e.g. addiction recovery, counselling, education" required></div>
 <div class="field"><label for="languages">Languages</label><input id="languages" name="languages" maxlength="200" placeholder="e.g. English, Tamil"></div>
@@ -66,7 +66,7 @@
 </form>
 </section>
 <script>
-const form=document.getElementById('application-form'),status=document.getElementById('application-status');
+const form=document.getElementById('application-form'),status=document.getElementById('application-status');\nconst type=document.getElementById('applicantType'),qualifications=document.getElementById('qualifications'),registrationBody=document.getElementById('registrationBody'),registrationNumber=document.getElementById('registrationNumber');\nfunction updateCredentialRequirements(){const required=type.value==='professional';qualifications.required=required;registrationBody.required=required;registrationNumber.required=required;qualifications.closest('.field').querySelector('label').textContent=required?'Qualifications and training *':'Qualifications and training';registrationBody.closest('.field').querySelector('label').textContent=required?'Registration / licensing body *':'Registration / licensing body';registrationNumber.closest('.field').querySelector('label').textContent=required?'Professional registration number *':'Professional registration number';}\ntype.addEventListener('change',updateCredentialRequirements);updateCredentialRequirements();
 form.addEventListener('submit',async e=>{
  e.preventDefault();const button=form.querySelector('button[type="submit"]');button.disabled=true;status.textContent='Submitting securely…';
  const value=id=>document.getElementById(id).value;
