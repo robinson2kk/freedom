@@ -1,0 +1,1 @@
+ALTER TABLE professional_applications ADD COLUMN supporting_documents_url TEXT;
