@@ -7,6 +7,7 @@ export async function onRequestPost({request,env}){
  const fullName=clean(b.fullName,100),email=clean(b.email,254).toLowerCase(),applicantType=clean(b.applicantType,40),supportAreas=clean(b.supportAreas,700),serviceMode=clean(b.serviceMode,30),serviceType=clean(b.serviceType,40),contactMethod=clean(b.publicContactMethod,20);
  const fee=b.sessionFee===""||b.sessionFee==null?null:Number(b.sessionFee);
  if(!fullName||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||!applicantType||!supportAreas||!serviceMode||!serviceType)return json({error:"Please complete all required fields with a valid email."},400);
+ if(applicantType==="professional"&&(!clean(b.qualifications,500)||!clean(b.registrationBody,200)||!clean(b.registrationNumber,100)))return json({error:"Qualified professionals must provide their qualifications, registration/licensing body and professional registration number."},400);
  if(!["professional","peer","volunteer"].includes(applicantType)||!["online","in-person","both"].includes(serviceMode)||!["volunteer","paid","education","combined"].includes(serviceType))return json({error:"Please select valid application options."},400);
  if(b.consentPrivacy!==true||b.consentVerification!==true)return json({error:"Please confirm the privacy notice and verification consent."},400);
  if(b.publicListingConsent===true&&(!["email","phone"].includes(contactMethod)||(contactMethod==="phone"&&!clean(b.phone,25))))return json({error:"Choose a valid public contact method and provide its contact detail."},400);
