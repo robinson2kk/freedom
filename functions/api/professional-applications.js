@@ -18,5 +18,5 @@ export async function onRequestPost({request,env}){
  if(years!==null&&(!Number.isInteger(years)||years<0||years>60))return json({error:"Enter experience from 0 to 60 years."},400);
  const id=randomHex(16);
  await env.DB.prepare(`INSERT INTO professional_applications(id,full_name,email,phone,applicant_type,qualifications,registration_body,registration_number,experience_years,support_areas,languages,location,service_mode,availability,service_type,bio,consent_privacy,consent_verification,public_listing_consent,public_contact_method,session_fee) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,1,?,?,?)`).bind(id,fullName,email,clean(b.phone,25)||null,applicantType,clean(b.qualifications,500)||null,clean(b.registrationBody,200)||null,clean(b.registrationNumber,100)||null,years,supportAreas,clean(b.languages,200)||null,clean(b.location,120)||null,serviceMode,clean(b.availability,200)||null,serviceType,clean(b.bio,700)||null,b.publicListingConsent===true?1:0,b.publicListingConsent===true?contactMethod:null,fee).run();
- return json({ok:true,message:"Application received for manual review."},201);
+ return json({ok:true,applicationId:id,message:"Application received for manual review."},201);
 }
