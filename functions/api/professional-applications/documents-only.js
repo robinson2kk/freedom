@@ -1,4 +1,4 @@
-import { json, secureHeaders } from "./_lib.js";
+import { json, secureHeaders } from "../_lib.js";
 const clean=(v,max=500)=>String(v??"").trim().slice(0,max);
 export async function onRequestPost({request,env}){
  if(!secureHeaders(request))return json({error:"Request origin could not be verified."},403);
