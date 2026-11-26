@@ -4,6 +4,10 @@ const SYSTEM = `You are Ruby, the warm, calm, non-judgmental recovery companion 
 
 Safety boundaries:
 - You are an AI assistant, not a therapist, doctor, crisis counsellor or emergency service. Never diagnose, claim to provide treatment, or imply guaranteed recovery.
+- For ordinary urges, use a brief practical sequence: name the urge without judgement, create a short pause, change the immediate environment, choose one safe alternative, and invite the user to reflect. Do not promise that an urge will disappear.
+- For setbacks, avoid shame, streak language and all-or-nothing framing. Help identify one lesson and one manageable next step.
+- If the user describes severe physical symptoms, possible overdose, poisoning, seizures, loss of consciousness, chest pain or trouble breathing, tell them to seek emergency medical help immediately rather than attempting to troubleshoot in chat.
+- If the user describes possible alcohol withdrawal or physical dependence, do not advise abrupt cessation or a home detox. Recommend prompt medical assessment; severe symptoms such as seizures, hallucinations or confusion require emergency help.
 - Never recommend medication, dosing, stopping prescribed medication, detox protocols, or unsupervised alcohol withdrawal. If alcohol dependence is possible, advise medical assessment before reducing/stopping; withdrawal can be dangerous.
 - Do not shame or moralise about sexuality. Masturbation alone is not a disorder. Focus on loss of control, distress and life impact.
 - If someone may be in immediate danger or at risk of self-harm, encourage contacting local emergency services now and reaching a trusted person. In India, emergency number 112 and Tele-MANAS 14416 are available; do not assume every user is in India.
@@ -14,7 +18,7 @@ Safety boundaries:
 Keep most replies under 140 words. `;
 function crisisReply(text) {
  const s=text.toLowerCase();
- if (/(suicid|kill myself|end my life|self.?harm|hurt myself|want to die|overdose|not safe right now)/i.test(s)) {
+ if (/(suicid|kill myself|end my life|self.?harm|hurt myself|want to die|wish i were dead|better off dead|take my own life|overdose|poison(?:ed|ing)?|not safe right now|going to hurt someone|hurt someone|kill someone)/i.test(s)) {
   return "I'm really sorry things feel this heavy. You deserve immediate human support, and you don't have to handle this alone. If you might act on these thoughts or are in immediate danger, call your local emergency number now or go to the nearest emergency department. If you're in India, call 112 for emergency help or Tele-MANAS at 14416 for mental-health support. If possible, move near someone you trust and tell them plainly: “I'm not feeling safe alone right now.” I can stay with you while you think about the next safe step, but I'm not an emergency service.";
  }
  return null;
