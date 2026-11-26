@@ -36,6 +36,8 @@ export async function onRequestPost({ request, env }) {
   if (blockedReason) return json({error:blockedReason},422);
   const recent=await env.DB.prepare("SELECT created_at FROM community_chat_messages WHERE user_id=? AND created_at>datetime('now','-8 seconds') LIMIT 1").bind(user.id).first();
   if (recent) return json({error:"Please wait a few seconds before sending another message."},429);
+  const recentCount=await env.DB.prepare("SELECT COUNT(*) AS total FROM community_chat_messages WHERE user_id=? AND created_at>datetime('now','-10 minutes')").bind(user.id).first();
+  if (Number(recentCount?.total||0)>=5) return json({error:"You have reached the chat limit of 5 messages in 10 minutes. Please take a short pause before posting again."},429);
   const id=randomHex(16);
   await env.DB.prepare("INSERT INTO community_chat_messages(id,user_id,display_name,message) VALUES(?,?,?,?)").bind(id,user.id,displayName,message).run();
   return json({ok:true,id,display_name:displayName,automated_check:"passed"});
