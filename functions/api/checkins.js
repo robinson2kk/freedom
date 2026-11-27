@@ -26,7 +26,17 @@ export async function onRequestPost({ request, env }) {
   const intensity = body.intensity == null ? null : Number(body.intensity);
   const allowedCategories = ["pornography","compulsive-sexual-behaviour","smoking","alcohol","gambling","gaming","digital"];
   const allowedEvents = ["check-in","urge-managed","milestone","setback"];
-  if (!allowedCategories.includes(category) || !allowedEvents.includes(eventType) || !/^\d{4}-\d{2}-\d{2}$/.test(logDate) || logDate > new Date().toISOString().slice(0,10) || (intensity !== null && (!Number.isInteger(intensity) || intensity < 1 || intensity > 10))) return json({ error: "Please check the entry details." }, 400);
+  const dateMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(logDate);
+  let validDate = false;
+  if (dateMatch) {
+    const year = Number(dateMatch[1]), month = Number(dateMatch[2]), day = Number(dateMatch[3]);
+    const parsed = new Date(Date.UTC(year, month - 1, day));
+    validDate = parsed.getUTCFullYear() === year && parsed.getUTCMonth() === month - 1 && parsed.getUTCDate() === day;
+    const latestAllowed = new Date();
+    latestAllowed.setUTCDate(latestAllowed.getUTCDate() + 1);
+    if (parsed > latestAllowed) validDate = false;
+  }
+  if (!allowedCategories.includes(category) || !allowedEvents.includes(eventType) || !validDate || (intensity !== null && (!Number.isInteger(intensity) || intensity < 1 || intensity > 10))) return json({ error: "Please check the entry details." }, 400);
   const id = String(body.id || randomHex(16)).slice(0,80);
   const triggerContext = String(body.trigger_context || "");
   const copingAction = String(body.coping_action || "");
