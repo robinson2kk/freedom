@@ -36,6 +36,8 @@ export async function onRequestPost({request,env}) {
  if(!secureHeaders(request)) return json({error:"Request origin could not be verified."},403);
  let body; try{body=await request.json()}catch{return json({error:"Please send a valid message."},400)}
  const message=String(body.message||"").trim();
+ const focusLabels={pornography:"pornography use or compulsive sexual behaviour",smoking:"smoking or nicotine use",alcohol:"alcohol use",gambling:"gambling",gaming:"gaming or screen habits",digital:"social media or digital habits"};
+ const focus=focusLabels[String(body.focus||"")]||null;
  if(!message||message.length>1200)return json({error:"Messages must be between 1 and 1,200 characters."},400);
  const safety=crisisReply(message);
  if(safety)return json({reply:safety,source:"safety-guidance"});
@@ -44,7 +46,10 @@ export async function onRequestPost({request,env}) {
   if(!await allowRequest(request,env))return json({error:"Ruby is taking a short breather. Please try again in a few minutes."},429);
   const history=Array.isArray(body.history)?body.history.slice(-6).map(item=>({role:item?.role==="assistant"?"assistant":"user",content:String(item?.content||"").slice(0,1200)})).filter(item=>item.content):[];
   if(history.length&&history[history.length-1].role==="user"&&history[history.length-1].content===message)history.pop();
-  const messages=[{role:"system",content:SYSTEM},...history,{role:"user",content:message}];
+  const focusNote=focus
+   ? `The user selected this recovery focus in My Companion: ${focus}. When relevant, tailor examples and practical next steps to this area. Do not assume this is a diagnosis or that every message is about this focus; follow what the user actually says. If the topic differs, respond to their stated topic.`
+   : "";
+  const messages=[{role:"system",content:focusNote?SYSTEM+"\\n\\n"+focusNote:SYSTEM},...history,{role:"user",content:message}];
   const result=await env.AI.run(MODEL,{messages,max_tokens:420,temperature:0.45});
   const reply=String(result?.response||result?.result?.response||"").trim();
   if(!reply)throw new Error("Empty AI response");
