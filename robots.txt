@@ -3,6 +3,8 @@ Allow: /
 Disallow: /admin-feedback.html
 Disallow: /admin.html
 Disallow: /admin-professionals.html
+Disallow: /admin-community-chat.html
+Disallow: /admin-withdrawals.html
 Disallow: /admin/
 Disallow: /api/
 Disallow: /account.html
