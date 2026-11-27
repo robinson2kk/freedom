@@ -19,7 +19,13 @@ Keep most replies under 140 words. `;
 function crisisReply(text) {
  const s=text.toLowerCase();
  if (/(suicid|kill myself|end my life|self.?harm|hurt myself|want to die|wish i were dead|better off dead|take my own life|overdose|poison(?:ed|ing)?|not safe right now|going to hurt someone|hurt someone|kill someone)/i.test(s)) {
-  return "I'm really sorry things feel this heavy. You deserve immediate human support, and you don't have to handle this alone. If you might act on these thoughts or are in immediate danger, call your local emergency number now or go to the nearest emergency department. If you're in India, call 112 for emergency help or Tele-MANAS at 14416 for mental-health support. If possible, move near someone you trust and tell them plainly: “I'm not feeling safe alone right now.” I can stay with you while you think about the next safe step, but I'm not an emergency service.";
+  return "I'm sorry this feels so heavy. Please get immediate human support. If you may act on these thoughts or cannot stay safe, call your local emergency number or go to the nearest emergency department now. In India, call 112 for emergency help; Tele-MANAS at 14416 offers mental-health support. If possible, move near someone you trust and tell them you need help staying safe. I'm an AI, not an emergency service.";
+ }
+ if (/(seizure|convulsions?|hallucinat(?:e|ing|ions?)|severe confusion|cannot breathe|can't breathe|trouble breathing|difficulty breathing|chest pain|unconscious|passed out|faint(?:ed|ing)|severe bleeding|overdose|poison(?:ed|ing)?)/i.test(s)) {
+  return "These symptoms may need urgent medical attention. Please call your local emergency number or go to the nearest emergency department now; do not wait for an online reply. In India, call 112. If possible, ask someone nearby to stay with you and help arrange care. I'm an AI and cannot assess or treat an emergency.";
+ }
+ if (/(alcohol|drinking|drink).{0,55}(withdrawal|dependent|dependence|daily|every day|stop|quit|shaking|tremor)|(withdrawal|dependent|dependence).{0,55}(alcohol|drinking)/i.test(s)) {
+  return "If you drink heavily or may be physically dependent on alcohol, stopping suddenly can be dangerous. Please contact a doctor or hospital promptly for a safe, individual assessment; don't attempt a home detox or change your drinking suddenly based on chat advice. Seizures, hallucinations or severe confusion need emergency care now. In India, call 112 for an emergency. See the FREEDOM Immediate Help page for support contacts.";
  }
  return null;
 }
@@ -44,7 +50,7 @@ export async function onRequestPost({request,env}) {
  if(!env.AI)return json({error:"Ruby is being connected. Please try again later."},503);
  try {
   if(!await allowRequest(request,env))return json({error:"Ruby is taking a short breather. Please try again in a few minutes."},429);
-  const history=Array.isArray(body.history)?body.history.slice(-6).map(item=>({role:item?.role==="assistant"?"assistant":"user",content:String(item?.content||"").slice(0,1200)})).filter(item=>item.content):[];
+  const history=Array.isArray(body.history)?body.history.slice(-6).map(item=>({role:item?.role==="assistant"?"assistant":"user",content:String(item?.content||"").trim().slice(0,1200)})).filter(item=>item.content):[];
   if(history.length&&history[history.length-1].role==="user"&&history[history.length-1].content===message)history.pop();
   const focusNote=focus
    ? `The user selected this recovery focus in My Companion: ${focus}. When relevant, tailor examples and practical next steps to this area. Do not assume this is a diagnosis or that every message is about this focus; follow what the user actually says. If the topic differs, respond to their stated topic.`
