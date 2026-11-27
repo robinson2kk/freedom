@@ -11,6 +11,12 @@ export async function onRequestPost({ request, env }) {
   if (!exists) return json({error:"Message not found."},404);
   try {
     await env.DB.prepare("INSERT INTO community_chat_reports(id,message_id,reporter_user_id,reason) VALUES(?,?,?,?)").bind(randomHex(16),messageId,user.id,reason).run();
-  } catch { return json({error:"You have already reported this message."},409); }
+  } catch (error) {
+    const detail=String(error?.message||"");
+    if (/UNIQUE constraint failed/i.test(detail)) {
+      return json({error:"You have already reported this message."},409);
+    }
+    return json({error:"We couldn't save your report right now. Please try again later."},500);
+  }
   return json({ok:true});
 }
