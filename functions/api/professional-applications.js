@@ -4,6 +4,14 @@ export async function onRequestPost({request,env}){
  if(!secureHeaders(request))return json({error:"Request origin could not be verified."},403);
  let b;try{b=await request.json()}catch{return json({error:"Please check the form and try again."},400)}
  if(clean(b.website,200))return json({ok:true,message:"Application received."});
+ const ip=request.headers.get("CF-Connecting-IP")||"unknown";
+ const salt=env.RUBY_RATE_SALT||"freedom-public";
+ const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(salt+":"+ip));
+ const ipHash=Array.from(new Uint8Array(digest),x=>x.toString(16).padStart(2,"0")).join("");
+ await env.DB.prepare("INSERT INTO public_request_limits(id,ip_hash,route) VALUES(?,?,?)").bind(randomHex(16),ipHash,"professional-application").run();
+ const ipRecent=await env.DB.prepare("SELECT COUNT(*) AS n FROM public_request_limits WHERE ip_hash=? AND route=? AND created_at>datetime('now','-15 minutes')").bind(ipHash,"professional-application").first();
+ await env.DB.prepare("DELETE FROM public_request_limits WHERE created_at<datetime('now','-1 day')").run();
+ if((ipRecent?.n||0)>5)return json({error:"Too many applications from this connection. Please try again in 15 minutes."},429);
  const supportingDocumentsUrl=clean(b.supportingDocumentsUrl,500);
  const fullName=clean(b.fullName,100),email=clean(b.email,254).toLowerCase(),applicantType=clean(b.applicantType,40),supportAreas=clean(b.supportAreas,700),serviceMode=clean(b.serviceMode,30),serviceType=clean(b.serviceType,40),contactMethod=clean(b.publicContactMethod,20);
  const fee=b.sessionFee===""||b.sessionFee==null?null:Number(b.sessionFee);
