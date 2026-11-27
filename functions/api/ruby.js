@@ -49,7 +49,7 @@ export async function onRequestPost({request,env}) {
   const focusNote=focus
    ? `The user selected this recovery focus in My Companion: ${focus}. When relevant, tailor examples and practical next steps to this area. Do not assume this is a diagnosis or that every message is about this focus; follow what the user actually says. If the topic differs, respond to their stated topic.`
    : "";
-  const messages=[{role:"system",content:focusNote?SYSTEM+"\\n\\n"+focusNote:SYSTEM},...history,{role:"user",content:message}];
+  const messages=[{role:"system",content:focusNote?SYSTEM+"\n\n"+focusNote:SYSTEM},...history,{role:"user",content:message}];
   const result=await env.AI.run(MODEL,{messages,max_tokens:420,temperature:0.45});
   const reply=String(result?.response||result?.result?.response||"").trim();
   if(!reply)throw new Error("Empty AI response");
