@@ -1,4 +1,10 @@
 import { json, currentUser, secureHeaders, randomHex } from "./_lib.js";
+
+function missingReflectionColumns(error) {
+  const message = String(error?.message || error || "");
+  return /no such column:\s*(?:trigger_context|coping_action)/i.test(message)
+    || /table\s+recovery_entries\s+has no column named\s+(?:trigger_context|coping_action)/i.test(message);
+}
 export async function onRequestGet({ request, env }) {
   const user = await currentUser(request, env);
   if (!user) return json({ error: "Please sign in." }, 401);
@@ -7,7 +13,8 @@ export async function onRequestGet({ request, env }) {
   try {
     const rows = await env.DB.prepare("SELECT id,category,event_type,intensity,trigger_context,coping_action,log_date,updated_at FROM recovery_entries WHERE user_id = ? ORDER BY log_date DESC LIMIT 200").bind(user.id).all();
     results = rows.results || [];
-  } catch {
+  } catch (error) {
+    if (!missingReflectionColumns(error)) throw error;
     hasReflections = false;
     const rows = await env.DB.prepare("SELECT id,category,event_type,intensity,log_date,updated_at FROM recovery_entries WHERE user_id = ? ORDER BY log_date DESC LIMIT 200").bind(user.id).all();
     results = rows.results || [];
@@ -46,7 +53,8 @@ export async function onRequestPost({ request, env }) {
   let hasReflections = true;
   try {
     await env.DB.prepare("INSERT INTO recovery_entries (id,user_id,category,event_type,intensity,trigger_context,coping_action,log_date) VALUES (?,?,?,?,?,?,?,?) ON CONFLICT(user_id,id) DO UPDATE SET category=excluded.category,event_type=excluded.event_type,intensity=excluded.intensity,trigger_context=excluded.trigger_context,coping_action=excluded.coping_action,log_date=excluded.log_date,updated_at=datetime('now')").bind(id,user.id,category,eventType,intensity,triggerContext || null,copingAction || null,logDate).run();
-  } catch {
+  } catch (error) {
+    if (!missingReflectionColumns(error)) throw error;
     hasReflections = false;
     await env.DB.prepare("INSERT INTO recovery_entries (id,user_id,category,event_type,intensity,log_date) VALUES (?,?,?,?,?,?) ON CONFLICT(user_id,id) DO UPDATE SET category=excluded.category,event_type=excluded.event_type,intensity=excluded.intensity,log_date=excluded.log_date,updated_at=datetime('now')").bind(id,user.id,category,eventType,intensity,logDate).run();
   }
