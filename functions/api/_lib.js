@@ -10,7 +10,9 @@ export function json(data, status = 200, headers = {}) {
 export function getCookie(request, name) {
   const raw = request.headers.get("Cookie") || "";
   const item = raw.split(";").map(v => v.trim()).find(v => v.startsWith(name + "="));
-  return item ? decodeURIComponent(item.slice(name.length + 1)) : null;
+  if (!item) return null;
+  try { return decodeURIComponent(item.slice(name.length + 1)); }
+  catch { return null; }
 }
 export function secureHeaders(request) {
   const origin = request.headers.get("Origin");
@@ -18,7 +20,12 @@ export function secureHeaders(request) {
   if (origin && origin !== url.origin) return false;
   if (request.method !== "GET" && request.method !== "HEAD" && !origin) {
     const referer = request.headers.get("Referer");
-    if (!referer || new URL(referer).origin !== url.origin) return false;
+    if (!referer) return false;
+    try {
+      if (new URL(referer).origin !== url.origin) return false;
+    } catch {
+      return false;
+    }
   }
   return true;
 }
