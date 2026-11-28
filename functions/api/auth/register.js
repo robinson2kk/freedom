@@ -10,9 +10,9 @@ export async function onRequestPost({ request, env }) {
   await env.DB.prepare("DELETE FROM auth_attempts WHERE attempted_at < datetime('now','-2 days')").run();
   const rawIp = request.headers.get("CF-Connecting-IP") || "";
   const ipHash = rawIp ? await sha256(rawIp) : null;
-  const limits = await env.DB.prepare("SELECT SUM(CASE WHEN email_key = ? AND (? = '' OR ip_hash = ?) THEN 1 ELSE 0 END) AS pair_count, SUM(CASE WHEN ip_hash = ? THEN 1 ELSE 0 END) AS ip_count FROM auth_attempts WHERE attempted_at > datetime('now','-1 hour')").bind(email, ipHash || "", ipHash || "", ipHash || "").first();
+  const limits = await env.DB.prepare("SELECT SUM(CASE WHEN email_key = ? AND (? = '' OR ip_hash = ?) THEN 1 ELSE 0 END) AS pair_count, SUM(CASE WHEN ip_hash = ? THEN 1 ELSE 0 END) AS ip_count FROM auth_attempts WHERE action = 'register' AND attempted_at > datetime('now','-1 hour')").bind(email, ipHash || "", ipHash || "", ipHash || "").first();
   if ((limits?.pair_count || 0) >= 5 || (ipHash && (limits?.ip_count || 0) >= 20)) return json({ error: "Too many account creation attempts. Please wait before trying again." }, 429);
-  await env.DB.prepare("INSERT INTO auth_attempts (id,email_key,ip_hash) VALUES (?,?,?)").bind(randomHex(16),email,ipHash).run();
+  await env.DB.prepare("INSERT INTO auth_attempts (id,email_key,ip_hash,action) VALUES (?,?,?,?)").bind(randomHex(16),email,ipHash,"register").run();
   const salt = randomHex(16);
   const hash = await passwordHash(password, salt);
   const userId = randomHex(16);
