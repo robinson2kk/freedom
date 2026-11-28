@@ -7,6 +7,7 @@ export async function onRequestPost({ request, env }) {
   const password = String(body.password || "");
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) return json({ error: "Enter a valid email address." }, 400);
   if (password.length < 12 || password.length > 128) return json({ error: "Use a password between 12 and 128 characters." }, 400);
+  await env.DB.prepare("DELETE FROM auth_attempts WHERE attempted_at < datetime('now','-2 days')").run();
   const attempts = await env.DB.prepare("SELECT COUNT(*) AS n FROM auth_attempts WHERE email_key = ? AND attempted_at > datetime('now','-1 hour')").bind(email).first();
   if ((attempts?.n || 0) >= 5) return json({ error: "Too many attempts. Please try again later." }, 429);
   await env.DB.prepare("INSERT INTO auth_attempts (id,email_key) VALUES (?,?)").bind(randomHex(16),email).run();
